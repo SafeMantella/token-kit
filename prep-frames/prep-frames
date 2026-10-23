@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Prep local pra revisão visual: 1 contact sheet + resumo.md (OCR e rostos por frame) em vez de N frames crus.
+# Uso: prep-frames video.mp4 [-n 9] [-o pasta]   |   prep-frames imagem.png [-o pasta]
+# Saída (padrão: /tmp/prep-frames/<nome>/): sheet.jpg  resumo.md  (+ frames/ pra abrir 1 em resolução cheia)
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+IN="${1:?uso: prep-frames video|imagem [-n 9] [-o pasta]}"; shift
+N=9; OUT=""
+while getopts ":n:o:" o; do case "$o" in n) N="$OPTARG";; o) OUT="$OPTARG";; esac; done
+NAME="$(basename "${IN%.*}")"; OUT="${OUT:-/tmp/prep-frames/$NAME}"
+mkdir -p "$OUT/frames"; rm -f "$OUT"/frames/*
+[ -x "$DIR/.vision" ] && [ "$DIR/.vision" -nt "$DIR/vision.swift" ] || swiftc -O "$DIR/vision.swift" -o "$DIR/.vision" 2>/dev/null
+case "${IN##*.}" in
+  png|jpg|jpeg|PNG|JPG) cp "$IN" "$OUT/frames/f01.${IN##*.}"; DUR=0; INFO="$(sips -g pixelWidth -g pixelHeight "$IN" | awk '/pixel/{printf $2"x"}' | sed 's/x$//')";;
+  *)
+    DUR="$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$IN")"
+    INFO="$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate -of csv=p=0 "$IN") ${DUR%.*}s"
+    ffmpeg -v error -y -i "$IN" -vf "fps=$N/$DUR,scale=540:-2" -frames:v "$N" "$OUT/frames/f%02d.jpg";;
+esac
+FR=("$OUT"/frames/*)
+COLS=3; [ "${#FR[@]}" -lt 4 ] && COLS="${#FR[@]}"
+ROWS=$(( (${#FR[@]} + COLS - 1) / COLS ))
+ffmpeg -v error -y -i "$OUT/frames/f%02d.${FR[0]##*.}" -vf "scale=360:-2,tile=${COLS}x${ROWS}" -frames:v 1 -q:v 4 "$OUT/sheet.jpg"
+{
+  echo "# $NAME — $INFO"
+  echo "Sheet: $OUT/sheet.jpg (grade ${COLS}x${ROWS}, ordem esquerda→direita). Frames cheios: $OUT/frames/"
+  echo; echo "| frame | t(s) | rostos | texto na tela |"; echo "|---|---|---|---|"
+  i=0; "$DIR/.vision" "${FR[@]}" | while IFS=$'\t' read -r f faces txt; do
+    t=$(awk -v d="$DUR" -v n="${#FR[@]}" -v i="$i" 'BEGIN{printf "%.1f", (i+0.5)*d/n}'); i=$((i+1))
+    echo "| $f | $t | $faces | ${txt:--} |"
+  done
+} > "$OUT/resumo.md"
+echo "$OUT/resumo.md"

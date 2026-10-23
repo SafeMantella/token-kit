@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+"""Resumo de 1 página de arquivo de texto longo: tamanho, índice de títulos com nº de linha e 1ª linha de cada seção.
+Uso: prep-texto arquivo [--max 40]   (depois: Read com offset/limit só na seção que interessa)"""
+import sys, re
+a = sys.argv[1:]
+mx = int(a[a.index('--max') + 1]) if '--max' in a else 40
+t = open(a[0], errors='replace').read(); L = t.split('\n')
+print(f"{a[0]} — {len(t)} chars (~{len(t)//4} tokens), {len(L)} linhas")
+H = [(i, l) for i, l in enumerate(L, 1) if re.match(r'#{1,4} ', l)]
+if H:
+    print("\nÍndice (linha: título → 1ª linha de conteúdo):")
+    for i, l in H[:mx]:
+        nxt = next((x.strip() for x in L[i:i + 6] if x.strip() and not x.startswith('#')), '')
+        print(f"{i}: {l.strip()[:70]} → {nxt[:90]}")
+    if len(H) > mx: print(f"... +{len(H) - mx} títulos")
+else:
+    print("\nSem títulos. Início:"); print('\n'.join(x[:120] for x in L[:8]))
+    print("Fim:"); print('\n'.join(x[:120] for x in L[-4:]))

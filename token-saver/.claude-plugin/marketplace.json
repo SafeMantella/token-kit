@@ -1,0 +1,5 @@
+{
+  "name": "pedro-social-tools",
+  "owner": { "name": "Pedro" },
+  "plugins": [{ "name": "token-saver", "source": "./" }]
+}

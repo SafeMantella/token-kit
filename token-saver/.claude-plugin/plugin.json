@@ -1,0 +1,1 @@
+{ "name": "token-saver", "version": "0.1.0", "description": "Avisa uma vez antes de ler imagem/arquivo grande cru e aponta o prep local (prep-frames, prep-texto)." }
