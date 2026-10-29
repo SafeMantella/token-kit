@@ -67,3 +67,7 @@ Validar e testar (8 testes): `claude plugin validate token-kit/token-saver && cl
 ## Repos relacionados
 
 Do mesmo kit do [@SafeMantella](https://github.com/SafeMantella): [transcrever-ptbr](https://github.com/SafeMantella/transcrever-ptbr) gera o `.leitura.txt` que o hook prefere; [video-cut-pipeline](https://github.com/SafeMantella/video-cut-pipeline), [social-toolbox](https://github.com/SafeMantella/social-toolbox), [video-tools](https://github.com/SafeMantella/video-tools), [sau-tools](https://github.com/SafeMantella/sau-tools).
+
+## Licença
+
+MIT. Veja [LICENSE](LICENSE).
