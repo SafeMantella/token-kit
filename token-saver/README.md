@@ -8,7 +8,7 @@
 | `cat` de arquivo > 30 KB no Bash | idem (fecha o atalho que fura o hook do Read) |
 | `Read` de `*.json` com `.leitura.txt` ao lado | indica o `.leitura.txt` (15.894 → 1.618 bytes medidos) |
 | 2º `notion-fetch` da mesma página | recusa; libera após `notion-update-page` nela ou na 3ª tentativa |
-| `memory/`, `CLAUDE.md`, `SKILL.md` | nunca bloqueia |
+| `memory/` (e `memoria/`, depois do passe de idioma), `CLAUDE.md`, `SKILL.md` | nunca bloqueia |
 
 ## Instalar (uma vez por projeto)
 

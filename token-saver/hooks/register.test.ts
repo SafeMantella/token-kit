@@ -37,9 +37,9 @@ test('imagem grande: recusa 1x apontando prep-frames', async ($, on) => {
   expect((await read($, '/t/f.png')).deny).toBeUndefined()
 })
 
-test('docs de regras (memory/, SKILL.md, CLAUDE.md) são lidos inteiros', async ($, on) => {
-  stubRead(on); on('fs.stat', tamanhos({ '/p/memory/a.md': 90_000, '/p/x/SKILL.md': 90_000, '/p/CLAUDE.md': 90_000 }))
-  for (const f of ['/p/memory/a.md', '/p/x/SKILL.md', '/p/CLAUDE.md']) expect((await read($, f)).deny).toBeUndefined()
+test('docs de regras (memory/, memoria/, SKILL.md, CLAUDE.md) são lidos inteiros', async ($, on) => {
+  stubRead(on); on('fs.stat', tamanhos({ '/p/memory/a.md': 90_000, '/p/memoria/a.md': 90_000, '/p/x/SKILL.md': 90_000, '/p/CLAUDE.md': 90_000 }))
+  for (const f of ['/p/memory/a.md', '/p/memoria/a.md', '/p/x/SKILL.md', '/p/CLAUDE.md']) expect((await read($, f)).deny).toBeUndefined()
 })
 
 test('notion-fetch repetido: 2ª chamada recusada, 3ª passa', async ($, on) => {

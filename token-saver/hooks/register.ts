@@ -3,7 +3,7 @@ import type { Register } from 'claude-code'
 const TOOLS = '/Volumes/1TB Mac/Desktop/social media/ferramentas'
 const IMG = /\.(png|jpe?g)$/i
 const TEXT = /\.(md|txt|json|csv)$/i
-const SKIP = /(\/memory\/|\/\.claude\/|\/prep-frames\/|CLAUDE\.md$|AGENTS\.md$|SKILL\.md$)/ // docs de regras: ler inteiros
+const SKIP = /(\/(memory|memoria)\/|\/\.claude\/|\/prep-frames\/|CLAUDE\.md$|AGENTS\.md$|SKILL\.md$)/ // docs de regras: ler inteiros
 const IMG_MIN = 150_000 // bytes
 const TEXT_MIN = 30_000
 
